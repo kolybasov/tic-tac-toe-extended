@@ -1,8 +1,8 @@
 {
-    "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/user/project.git",
-    "license": "BSD3",
+    "version": "0.1.0",
+    "summary": "Extended version of Tic Tac Toe game. Build with Elm.",
+    "repository": "https://github.com/kolybasov/tic-tac-toe-extended.git",
+    "license": "MIT",
     "source-directories": [
         "./src"
     ],
