@@ -1,5 +1,7 @@
 # Tic Tac Toe extended
 
+![screenshot]( https://i.imgur.com/l1ERsI7.png )
+
 ## Run
 
 1. Install elm platform and create-elm-app `$ npm install -g elm create-elm-app`
