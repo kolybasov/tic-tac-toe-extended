@@ -1,9 +1,9 @@
 module Cell exposing (..)
 
-import Html exposing (Html, Attribute, text, button)
-import Html.Attributes exposing (class, disabled, title)
+import Html exposing (Html, text, button)
+import Html.Attributes exposing (class, disabled)
 import Html.Events exposing (onClick)
-import Types exposing (Row, Col)
+import Types exposing (Row, Col, Player(X, O))
 
 
 -- MODEL
@@ -14,11 +14,6 @@ type alias Cell =
     , col : Col
     , player : Maybe Player
     }
-
-
-type Player
-    = X
-    | O
 
 
 

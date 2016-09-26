@@ -5,8 +5,8 @@ import Html.Attributes exposing (class)
 import Html.App as App
 import Debug
 import Array exposing (Array)
-import Cell exposing (Cell, Player)
-import Types exposing (Row, Col)
+import Cell exposing (Cell)
+import Types exposing (Row, Col, Player(X, O))
 import Helpers
 
 
@@ -17,6 +17,7 @@ type alias Field =
     { row : Row
     , col : Col
     , cells : Array (Array Cell)
+    , available : Bool
     }
 
 
@@ -24,7 +25,7 @@ create : Row -> Col -> Field
 create row col =
     let
         cells =
-            Helpers.createMatrix 2
+            Helpers.createMatrix 3
                 (\cellRow cellCol ->
                     { row = cellRow
                     , col = cellCol
@@ -35,6 +36,7 @@ create row col =
         { row = row
         , col = col
         , cells = cells
+        , available = True
         }
 
 
@@ -43,14 +45,17 @@ create row col =
 
 
 type Msg
-    = TakeCell Cell Player
+    = TakeCell Cell
 
 
 update : Msg -> Field -> ( Field, Cmd Msg )
 update msg field =
     case msg of
-        TakeCell cell player ->
-            updateCell field cell player
+        TakeCell cell ->
+            if field.available then
+                updateCell field cell X
+            else
+                ( field, Cmd.none )
 
 
 updateCell : Field -> Cell -> Player -> ( Field, Cmd Msg )
@@ -68,7 +73,7 @@ updateCell field cell player =
                     Array.set cell.col newCell row
 
                 Nothing ->
-                    Debug.crash "Cannot find row"
+                    Debug.crash "Row with cell is not found"
 
         newCells =
             Array.set cell.row newRow field.cells
@@ -82,7 +87,10 @@ updateCell field cell player =
 
 view : Field -> Html Msg
 view field =
-    div [ class "field" ] (Array.toList (Array.map rowView field.cells))
+    div
+        [ class "field"
+        ]
+        (Array.toList (Array.map rowView field.cells))
 
 
 rowView : Array Cell -> Html Msg
@@ -92,4 +100,4 @@ rowView cells =
 
 cellView : Cell -> Html Msg
 cellView cell =
-    Cell.view (TakeCell cell Cell.X) cell
+    Cell.view (TakeCell cell) cell

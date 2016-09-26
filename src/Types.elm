@@ -7,3 +7,8 @@ type alias Row =
 
 type alias Col =
     Int
+
+
+type Player
+    = X
+    | O

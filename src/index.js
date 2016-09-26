@@ -4,4 +4,4 @@ var Elm = require('./Main.elm');
 
 var root  = document.getElementById('root');
 
-Elm.TicTacToeExtended.embed(root);
+Elm.Main.embed(root);

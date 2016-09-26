@@ -18,7 +18,7 @@ type alias Board =
 
 emptyBoard : Board
 emptyBoard =
-    Helpers.createMatrix 2 Field.create
+    Helpers.createMatrix 3 Field.create
 
 
 
@@ -51,7 +51,7 @@ updateField msg field board =
                     Array.set field.col newField row
 
                 Nothing ->
-                    Debug.crash "Row is not found"
+                    Debug.crash "Row with field is not found"
 
         newBoard =
             Array.set field.row newRow board

@@ -8,7 +8,7 @@ createMatrix : Int -> (Row -> Col -> a) -> Array (Array a)
 createMatrix size callback =
     let
         arrToMap =
-            Array.fromList [0..size]
+            Array.fromList [0..(size - 1)]
     in
         Array.map
             (\row ->
