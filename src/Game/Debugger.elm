@@ -1,19 +1,20 @@
 module Game.Debugger
     exposing
-        ( view
+        ( program
         )
 
-import Html exposing (Html, button, text, div)
-import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
+import Html exposing (Html)
+import Html.App as App
+import TimeTravel.Html.App as TimeTravel
 
 
-view : msg -> Bool -> a -> Html msg
-view msg debug store =
-    if debug then
-        div [ class "debugger" ]
-            [ button [ onClick msg ] [ text "Reset store" ]
-            , div [ class "debug-store" ] [ text (toString store) ]
-            ]
-    else
-        text ""
+program : { init : ( model, Cmd msg ), update : msg -> model -> ( model, Cmd msg ), subscriptions : model -> Sub msg, view : model -> Html msg } -> Program Never
+program =
+    let
+        debug =
+            True
+    in
+        if debug then
+            TimeTravel.program
+        else
+            App.program

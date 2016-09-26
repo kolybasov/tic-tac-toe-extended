@@ -10,13 +10,11 @@ import Html exposing (Html, text, h2, div)
 import Html.App as App
 import Game.Board as Board exposing (Board)
 import Game.Types exposing (Player(X, O))
-import Game.Debugger as Debugger
 
 
 type alias Store =
     { board : Board
     , currentPlayer : Player
-    , debug : Bool
     }
 
 
@@ -24,7 +22,6 @@ initialStore : Store
 initialStore =
     { board = Board.emptyBoard
     , currentPlayer = X
-    , debug = True
     }
 
 
@@ -70,7 +67,6 @@ view store =
     div []
         [ h2 [] [ text "Tic Tac Toe Extended" ]
         , boardView store.board
-        , Debugger.view ResetStore store.debug store
         ]
 
 
