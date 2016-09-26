@@ -1,0 +1,20 @@
+{
+  "name": "ttt-extended",
+  "version": "0.1.0",
+  "description": "Tic Tac Toe extended game build with Elm.",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kolybasov/tic-tac-toe-extended.git"
+  },
+  "keywords": [],
+  "author": "Mykola Basov <kolybasov@gmail.com> (http://twitter.com/kolybasov)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kolybasov/tic-tac-toe-extended/issues"
+  },
+  "homepage": "https://github.com/kolybasov/tic-tac-toe-extended#readme",
+  "dependencies": {
+    "normalize.css": "4.2.0"
+  }
+}
