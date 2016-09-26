@@ -13,8 +13,8 @@
 * [x] Draw board, field, cell
 * [x] Add basic styles
 * [x] Add ability to take cell on click
-* [ ] Switch current player
-* [ ] Add ability to take only allowed cell in the allowed field
+* [x] Switch current player
+* [x] Add ability to take only allowed cell in the allowed field
 * [ ] Detect field state (Winner(X/O), Draw, Active)
 * [ ] Detect board state ⇑ (same as top)
 * [ ] Allow to choose player name

@@ -1,10 +1,11 @@
 module Game.Helpers
     exposing
         ( createMatrix
+        , switchPlayer
         )
 
 import Array exposing (Array)
-import Game.Types exposing (Row, Col)
+import Game.Types exposing (Row, Col, Player(X, O))
 
 
 createMatrix : Int -> (Row -> Col -> a) -> Array (Array a)
@@ -22,3 +23,11 @@ createMatrix size callback =
                     arrToMap
             )
             arrToMap
+
+
+switchPlayer : Player -> Player
+switchPlayer player =
+    if player == X then
+        O
+    else
+        X

@@ -10,10 +10,11 @@ module Game.Board
 import Html exposing (Html, div)
 import Html.Attributes exposing (class)
 import Html.App as App
-import Debug
 import Array exposing (Array)
 import Game.Field as Field exposing (Field)
 import Game.Helpers as Helpers
+import Game.Types exposing (Player)
+import Game.Cell exposing (Cell)
 
 
 -- MODEL
@@ -36,21 +37,21 @@ type Msg
     = FieldMsg Field Field.Msg
 
 
-update : Msg -> Board -> ( Board, Cmd Msg )
-update msg board =
+update : Msg -> Player -> Board -> ( Board, Cmd Msg, Maybe Cell )
+update msg player board =
     case msg of
         FieldMsg field msg' ->
-            updateField msg' field board
+            updateField msg' player field board
 
 
-updateField : Field.Msg -> Field -> Board -> ( Board, Cmd Msg )
-updateField msg field board =
+updateField : Field.Msg -> Player -> Field -> Board -> ( Board, Cmd Msg, Maybe Cell )
+updateField msg player field board =
     let
+        ( newField, fieldCmd, updatedCell ) =
+            Field.update msg player field
+
         rowToChange =
             Array.get field.row board
-
-        ( newField, fieldCmd ) =
-            Field.update msg field
 
         newRow =
             case rowToChange of
@@ -58,12 +59,40 @@ updateField msg field board =
                     Array.set field.col newField row
 
                 Nothing ->
-                    Debug.crash "Row with field is not found"
+                    Array.fromList []
 
         newBoard =
             Array.set field.row newRow board
+
+        updatedBoard =
+            case updatedCell of
+                Nothing ->
+                    newBoard
+
+                Just cell ->
+                    updateFieldsAvailability newBoard cell
     in
-        ( newBoard, Cmd.none )
+        ( updatedBoard, Cmd.none, updatedCell )
+
+
+updateFieldsAvailability : Board -> Cell -> Board
+updateFieldsAvailability board cell =
+    Array.indexedMap
+        (\boardRow cellsRow ->
+            Array.indexedMap
+                (\boardCol field ->
+                    let
+                        coordsAreEqual =
+                            (boardCol == cell.col) && (boardRow == cell.row)
+
+                        newField =
+                            { field | available = coordsAreEqual }
+                    in
+                        newField
+                )
+                cellsRow
+        )
+        board
 
 
 

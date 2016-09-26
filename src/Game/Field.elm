@@ -8,11 +8,10 @@ module Game.Field
         )
 
 import Html exposing (Html, div)
-import Html.Attributes exposing (class)
-import Debug
+import Html.Attributes exposing (class, classList)
 import Array exposing (Array)
 import Game.Cell as Cell exposing (Cell)
-import Game.Types exposing (Row, Col, Player(X, O))
+import Game.Types exposing (Row, Col, Player)
 import Game.Helpers as Helpers
 
 
@@ -54,17 +53,17 @@ type Msg
     = TakeCell Cell
 
 
-update : Msg -> Field -> ( Field, Cmd Msg )
-update msg field =
+update : Msg -> Player -> Field -> ( Field, Cmd Msg, Maybe Cell )
+update msg player field =
     case msg of
         TakeCell cell ->
-            if field.available then
-                updateCell field cell X
+            if field.available && not (Cell.taken cell) then
+                updateCell field cell player
             else
-                ( field, Cmd.none )
+                ( field, Cmd.none, Nothing )
 
 
-updateCell : Field -> Cell -> Player -> ( Field, Cmd Msg )
+updateCell : Field -> Cell -> Player -> ( Field, Cmd Msg, Maybe Cell )
 updateCell field cell player =
     let
         rowToChange =
@@ -79,12 +78,12 @@ updateCell field cell player =
                     Array.set cell.col newCell row
 
                 Nothing ->
-                    Debug.crash "Row with cell is not found"
+                    Array.fromList []
 
         newCells =
             Array.set cell.row newRow field.cells
     in
-        ( { field | cells = newCells }, Cmd.none )
+        ( { field | cells = newCells }, Cmd.none, Just newCell )
 
 
 
@@ -94,7 +93,10 @@ updateCell field cell player =
 view : Field -> Html Msg
 view field =
     div
-        [ class "field"
+        [ classList
+            [ ( "field", True )
+            , ( "disabled", not field.available )
+            ]
         ]
         (Array.toList (Array.map rowView field.cells))
 
