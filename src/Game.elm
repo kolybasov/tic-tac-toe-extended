@@ -1,16 +1,16 @@
 module Game
     exposing
-        ( init
+        ( Store
+        , init
         , update
         , view
-        , Store
         )
 
 import Html exposing (Html, text, h2, div)
 import Html.App as App
-import Board exposing (Board)
-import Types exposing (Player(X, O))
-import Debugger
+import Game.Board as Board exposing (Board)
+import Game.Types exposing (Player(X, O))
+import Game.Debugger as Debugger
 
 
 type alias Store =

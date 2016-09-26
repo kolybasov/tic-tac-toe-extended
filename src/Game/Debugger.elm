@@ -1,4 +1,7 @@
-module Debugger exposing (view)
+module Game.Debugger
+    exposing
+        ( view
+        )
 
 import Html exposing (Html, button, text, div)
 import Html.Attributes exposing (class)

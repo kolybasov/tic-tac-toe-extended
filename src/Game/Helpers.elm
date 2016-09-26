@@ -1,7 +1,10 @@
-module Helpers exposing (..)
+module Game.Helpers
+    exposing
+        ( createMatrix
+        )
 
 import Array exposing (Array)
-import Types exposing (Row, Col)
+import Game.Types exposing (Row, Col)
 
 
 createMatrix : Int -> (Row -> Col -> a) -> Array (Array a)

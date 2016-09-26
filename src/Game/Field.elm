@@ -1,13 +1,19 @@
-module Field exposing (..)
+module Game.Field
+    exposing
+        ( Field
+        , Msg
+        , create
+        , update
+        , view
+        )
 
-import Html exposing (Html, text, div, button)
+import Html exposing (Html, div)
 import Html.Attributes exposing (class)
-import Html.App as App
 import Debug
 import Array exposing (Array)
-import Cell exposing (Cell)
-import Types exposing (Row, Col, Player(X, O))
-import Helpers
+import Game.Cell as Cell exposing (Cell)
+import Game.Types exposing (Row, Col, Player(X, O))
+import Game.Helpers as Helpers
 
 
 -- MODEL

@@ -1,12 +1,19 @@
-module Board exposing (..)
+module Game.Board
+    exposing
+        ( Board
+        , Msg
+        , emptyBoard
+        , update
+        , view
+        )
 
-import Html exposing (Html, text, div)
+import Html exposing (Html, div)
 import Html.Attributes exposing (class)
 import Html.App as App
 import Debug
 import Array exposing (Array)
-import Field exposing (Field)
-import Helpers
+import Game.Field as Field exposing (Field)
+import Game.Helpers as Helpers
 
 
 -- MODEL

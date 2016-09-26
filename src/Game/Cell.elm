@@ -1,9 +1,14 @@
-module Cell exposing (..)
+module Game.Cell
+    exposing
+        ( Cell
+        , taken
+        , view
+        )
 
 import Html exposing (Html, text, button)
 import Html.Attributes exposing (class, disabled)
 import Html.Events exposing (onClick)
-import Types exposing (Row, Col, Player(X, O))
+import Game.Types exposing (Row, Col, Player(X, O))
 
 
 -- MODEL
