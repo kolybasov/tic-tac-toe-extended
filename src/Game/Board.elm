@@ -12,7 +12,7 @@ import Html.Attributes exposing (class)
 import Html.App as App
 import Array exposing (Array)
 import Game.Field as Field exposing (Field)
-import Game.Types exposing (Player, Coords)
+import Game.Types exposing (Row, Col, Player, Coords)
 import Game.Matrix as Matrix exposing (Matrix)
 
 
@@ -25,7 +25,7 @@ type alias Board =
 
 emptyBoard : Board
 emptyBoard =
-    Matrix.create 3 Field.create
+    Matrix.create 3 (\_ _ -> Field.create)
 
 
 
@@ -33,24 +33,24 @@ emptyBoard =
 
 
 type Msg
-    = FieldMsg Field Field.Msg
+    = FieldMsg Coords Field Field.Msg
 
 
 update : Msg -> Player -> Board -> ( Board, Cmd Msg, Maybe Coords )
 update msg player board =
     case msg of
-        FieldMsg field msg' ->
-            updateField msg' player field board
+        FieldMsg coords field msg' ->
+            updateField msg' coords player field board
 
 
-updateField : Field.Msg -> Player -> Field -> Board -> ( Board, Cmd Msg, Maybe Coords )
-updateField msg player field board =
+updateField : Field.Msg -> Coords -> Player -> Field -> Board -> ( Board, Cmd Msg, Maybe Coords )
+updateField msg ( row, col ) player field board =
     let
         ( newField, fieldCmd, nextCoords ) =
             Field.update msg player field
 
         newBoard =
-            Matrix.set ( field.row, field.col ) newField board
+            Matrix.set ( row, col ) newField board
 
         updatedBoard =
             case nextCoords of
@@ -58,30 +58,26 @@ updateField msg player field board =
                     newBoard
 
                 Just coords ->
-                    updateFieldsAvailability newBoard coords
+                    updateFieldsAvailability coords newBoard
     in
         ( updatedBoard, Cmd.none, nextCoords )
 
 
-updateFieldsAvailability : Board -> Coords -> Board
-updateFieldsAvailability board ( row, col ) =
-    Array.indexedMap
-        (\boardRow cellsRow ->
-            Array.indexedMap
-                (\boardCol field ->
-                    let
-                        coordsAreEqual =
-                            (boardCol == col) && (boardRow == row)
+updateFieldsAvailability : Coords -> Board -> Board
+updateFieldsAvailability ( row, col ) board =
+    Matrix.indexedMap
+        (\boardRow boardCol field ->
+            let
+                coordsAreEqual =
+                    (boardCol == col) && (boardRow == row)
 
-                        availability =
-                            coordsAreEqual
+                availability =
+                    coordsAreEqual
 
-                        newField =
-                            { field | available = availability }
-                    in
-                        newField
-                )
-                cellsRow
+                newField =
+                    { field | available = availability }
+            in
+                newField
         )
         board
 
@@ -92,14 +88,14 @@ updateFieldsAvailability board ( row, col ) =
 
 view : Board -> Html Msg
 view board =
-    div [ class "board" ] (Array.toList (Array.map rowView board))
+    div [ class "board" ] (Array.toList (Array.indexedMap rowView board))
 
 
-rowView : Array Field -> Html Msg
-rowView fields =
-    div [ class "board-row" ] (Array.toList (Array.map fieldView fields))
+rowView : Row -> Array Field -> Html Msg
+rowView row fields =
+    div [ class "board-row" ] (Array.toList (Array.indexedMap (fieldView row) fields))
 
 
-fieldView : Field -> Html Msg
-fieldView field =
-    App.map (FieldMsg field) (Field.view field)
+fieldView : Row -> Col -> Field -> Html Msg
+fieldView row col field =
+    App.map (FieldMsg ( row, col ) field) (Field.view field)

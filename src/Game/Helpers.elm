@@ -3,7 +3,7 @@ module Game.Helpers
         ( switchPlayer
         )
 
-import Game.Types exposing (Player(X, O, Draw))
+import Game.Types exposing (Player(X, O))
 
 
 switchPlayer : Player -> Player
@@ -14,6 +14,3 @@ switchPlayer player =
 
         O ->
             X
-
-        Draw ->
-            Draw

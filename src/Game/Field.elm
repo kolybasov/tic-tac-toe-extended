@@ -19,24 +19,20 @@ import Game.Matrix as Matrix exposing (Matrix)
 
 
 type alias Field =
-    { row : Row
-    , col : Col
-    , cells : Matrix (Maybe Player)
+    { cells : Matrix (Maybe Player)
     , available : Bool
     , winner : Maybe Player
     , full : Bool
     }
 
 
-create : Row -> Col -> Field
-create row col =
+create : Field
+create =
     let
         cells =
             Matrix.create 3 (\_ _ -> Nothing)
     in
-        { row = row
-        , col = col
-        , cells = cells
+        { cells = cells
         , available = True
         , winner = Nothing
         , full = False
