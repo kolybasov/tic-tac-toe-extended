@@ -18,8 +18,10 @@
 * [ ] Detect field state (Winner(X/O), Draw, Active)
 * [ ] Detect board state ⇑ (same as top)
 * [ ] Allow to choose player name
+* [ ] Show current player
 * [ ] Add multiplayer
   * [ ] Create API [probably link to server](https://gihub.com/kolybasov/tic-tac-toe-extended-server)
+  * [ ] Integrate with app
   * [ ] Allow to create room
   * [ ] Allow to join room by id or share link
 * [ ] Add better styles

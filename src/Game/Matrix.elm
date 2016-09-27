@@ -6,6 +6,9 @@ module Game.Matrix
         , get
         , set
         , all
+        , map
+        , indexedMap
+        , toList
         )
 
 import Array exposing (Array)
@@ -57,6 +60,21 @@ all func matrix =
     flatten matrix
         |> Array.filter func
         |> Array.isEmpty
+
+
+map : (a -> b) -> Matrix a -> Matrix b
+map func matrix =
+    Array.map (\row -> (Array.map func row)) matrix
+
+
+indexedMap : (Row -> Col -> a -> b) -> Matrix a -> Matrix b
+indexedMap func matrix =
+    Array.indexedMap (\rowIdx row -> (Array.indexedMap (func rowIdx) row)) matrix
+
+
+toList : Matrix a -> List (List a)
+toList matrix =
+    Array.toList (Array.map (\row -> Array.toList row) matrix)
 
 
 get : Coords -> Matrix a -> Maybe a
