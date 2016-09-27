@@ -10,9 +10,9 @@ module Game.Field
 import Html exposing (Html, div)
 import Html.Attributes exposing (class, classList)
 import Array exposing (Array)
-import Game.Cell as Cell exposing (Cell)
-import Game.Types exposing (Row, Col, Player)
-import Game.Helpers as Helpers
+import Game.Cell as Cell
+import Game.Types exposing (Row, Col, Player, Coords)
+import Game.Matrix as Matrix exposing (Matrix)
 
 
 -- MODEL
@@ -21,8 +21,10 @@ import Game.Helpers as Helpers
 type alias Field =
     { row : Row
     , col : Col
-    , cells : Array (Array Cell)
+    , cells : Matrix (Maybe Player)
     , available : Bool
+    , winner : Maybe Player
+    , full : Bool
     }
 
 
@@ -30,18 +32,14 @@ create : Row -> Col -> Field
 create row col =
     let
         cells =
-            Helpers.createMatrix 3
-                (\cellRow cellCol ->
-                    { row = cellRow
-                    , col = cellCol
-                    , player = Nothing
-                    }
-                )
+            Matrix.create 3 (\_ _ -> Nothing)
     in
         { row = row
         , col = col
         , cells = cells
         , available = True
+        , winner = Nothing
+        , full = False
         }
 
 
@@ -50,40 +48,45 @@ create row col =
 
 
 type Msg
-    = TakeCell Cell
+    = TakeCell Coords
 
 
-update : Msg -> Player -> Field -> ( Field, Cmd Msg, Maybe Cell )
+update : Msg -> Player -> Field -> ( Field, Cmd Msg, Maybe Coords )
 update msg player field =
     case msg of
-        TakeCell cell ->
-            if field.available && not (Cell.taken cell) then
-                updateCell field cell player
+        TakeCell coords ->
+            if field.available && not (cellIsTaken coords field) then
+                updateCell field coords player
             else
                 ( field, Cmd.none, Nothing )
 
 
-updateCell : Field -> Cell -> Player -> ( Field, Cmd Msg, Maybe Cell )
-updateCell field cell player =
+updateCell : Field -> Coords -> Player -> ( Field, Cmd Msg, Maybe Coords )
+updateCell field coords player =
     let
-        rowToChange =
-            Array.get cell.row field.cells
-
-        newCell =
-            { cell | player = (Just player) }
-
-        newRow =
-            case rowToChange of
-                Just row ->
-                    Array.set cell.col newCell row
-
-                Nothing ->
-                    Array.fromList []
-
         newCells =
-            Array.set cell.row newRow field.cells
+            Matrix.set coords (Just player) field.cells
     in
-        ( { field | cells = newCells }, Cmd.none, Just newCell )
+        ( { field | cells = newCells }, Cmd.none, Just coords )
+
+
+cellIsTaken : Coords -> Field -> Bool
+cellIsTaken coords field =
+    let
+        cell =
+            Matrix.get coords field.cells
+    in
+        case cell of
+            Just cell' ->
+                cell' /= Nothing
+
+            Nothing ->
+                False
+
+
+isFull : Field -> Bool
+isFull field =
+    Matrix.all (\player -> player /= Nothing) field.cells
 
 
 
@@ -98,14 +101,14 @@ view field =
             , ( "disabled", not field.available )
             ]
         ]
-        (Array.toList (Array.map rowView field.cells))
+        (Array.toList (Array.indexedMap rowView field.cells))
 
 
-rowView : Array Cell -> Html Msg
-rowView cells =
-    div [ class "cell-row" ] (Array.toList (Array.map cellView cells))
+rowView : Row -> Array (Maybe Player) -> Html Msg
+rowView row cells =
+    div [ class "cell-row" ] (Array.toList (Array.indexedMap (cellView row) cells))
 
 
-cellView : Cell -> Html Msg
-cellView cell =
-    Cell.view (TakeCell cell) cell
+cellView : Row -> Col -> Maybe Player -> Html Msg
+cellView row col player =
+    Cell.view (TakeCell ( row, col )) player

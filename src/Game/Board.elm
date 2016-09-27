@@ -12,21 +12,20 @@ import Html.Attributes exposing (class)
 import Html.App as App
 import Array exposing (Array)
 import Game.Field as Field exposing (Field)
-import Game.Helpers as Helpers
-import Game.Types exposing (Player)
-import Game.Cell exposing (Cell)
+import Game.Types exposing (Player, Coords)
+import Game.Matrix as Matrix exposing (Matrix)
 
 
 -- MODEL
 
 
 type alias Board =
-    Array (Array Field)
+    Matrix Field
 
 
 emptyBoard : Board
 emptyBoard =
-    Helpers.createMatrix 3 Field.create
+    Matrix.create 3 Field.create
 
 
 
@@ -37,56 +36,48 @@ type Msg
     = FieldMsg Field Field.Msg
 
 
-update : Msg -> Player -> Board -> ( Board, Cmd Msg, Maybe Cell )
+update : Msg -> Player -> Board -> ( Board, Cmd Msg, Maybe Coords )
 update msg player board =
     case msg of
         FieldMsg field msg' ->
             updateField msg' player field board
 
 
-updateField : Field.Msg -> Player -> Field -> Board -> ( Board, Cmd Msg, Maybe Cell )
+updateField : Field.Msg -> Player -> Field -> Board -> ( Board, Cmd Msg, Maybe Coords )
 updateField msg player field board =
     let
-        ( newField, fieldCmd, updatedCell ) =
+        ( newField, fieldCmd, nextCoords ) =
             Field.update msg player field
 
-        rowToChange =
-            Array.get field.row board
-
-        newRow =
-            case rowToChange of
-                Just row ->
-                    Array.set field.col newField row
-
-                Nothing ->
-                    Array.fromList []
-
         newBoard =
-            Array.set field.row newRow board
+            Matrix.set ( field.row, field.col ) newField board
 
         updatedBoard =
-            case updatedCell of
+            case nextCoords of
                 Nothing ->
                     newBoard
 
-                Just cell ->
-                    updateFieldsAvailability newBoard cell
+                Just coords ->
+                    updateFieldsAvailability newBoard coords
     in
-        ( updatedBoard, Cmd.none, updatedCell )
+        ( updatedBoard, Cmd.none, nextCoords )
 
 
-updateFieldsAvailability : Board -> Cell -> Board
-updateFieldsAvailability board cell =
+updateFieldsAvailability : Board -> Coords -> Board
+updateFieldsAvailability board ( row, col ) =
     Array.indexedMap
         (\boardRow cellsRow ->
             Array.indexedMap
                 (\boardCol field ->
                     let
                         coordsAreEqual =
-                            (boardCol == cell.col) && (boardRow == cell.row)
+                            (boardCol == col) && (boardRow == row)
+
+                        availability =
+                            coordsAreEqual
 
                         newField =
-                            { field | available = coordsAreEqual }
+                            { field | available = availability }
                     in
                         newField
                 )

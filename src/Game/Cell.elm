@@ -1,54 +1,42 @@
 module Game.Cell
     exposing
-        ( Cell
-        , taken
+        ( taken
         , view
         )
 
 import Html exposing (Html, text, button)
 import Html.Attributes exposing (class, disabled)
 import Html.Events exposing (onClick)
-import Game.Types exposing (Row, Col, Player(X, O))
-
-
--- MODEL
-
-
-type alias Cell =
-    { row : Row
-    , col : Col
-    , player : Maybe Player
-    }
-
+import Game.Types exposing (Player(X, O))
 
 
 -- HELPERS
 
 
-taken : Cell -> Bool
-taken cell =
-    cell.player /= Nothing
+taken : Maybe Player -> Bool
+taken player =
+    player /= Nothing
 
 
 
 -- VIEW
 
 
-view : msg -> Cell -> Html msg
-view msg cell =
+view : msg -> Maybe Player -> Html msg
+view msg player =
     button
         [ class "cell"
-        , disabled (taken cell)
+        , disabled (taken player)
         , onClick msg
         ]
-        [ case cell.player of
+        [ case player of
             Just X ->
                 xPlayerView
 
             Just O ->
                 oPlayerView
 
-            Nothing ->
+            _ ->
                 emptyView
         ]
 

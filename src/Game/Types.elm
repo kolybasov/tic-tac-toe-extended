@@ -2,7 +2,8 @@ module Game.Types
     exposing
         ( Row
         , Col
-        , Player(X, O)
+        , Player(X, O, Draw)
+        , Coords
         )
 
 
@@ -14,6 +15,11 @@ type alias Col =
     Int
 
 
+type alias Coords =
+    ( Row, Col )
+
+
 type Player
     = X
     | O
+    | Draw

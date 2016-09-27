@@ -9,9 +9,8 @@ module Game
 import Html exposing (Html, text, h2, div)
 import Html.App as App
 import Game.Board as Board exposing (Board)
-import Game.Types exposing (Row, Col, Player(X))
+import Game.Types exposing (Player(X), Coords)
 import Game.Helpers as Helpers
-import Game.Cell exposing (Cell)
 
 
 type alias Store =
@@ -38,7 +37,6 @@ init =
 
 type Msg
     = BoardMsg Board.Msg
-    | ResetStore
 
 
 update : Msg -> Store -> ( Store, Cmd Msg )
@@ -47,18 +45,15 @@ update msg store =
         BoardMsg msg' ->
             updateBoard msg' store
 
-        ResetStore ->
-            init
-
 
 updateBoard : Board.Msg -> Store -> ( Store, Cmd Msg )
 updateBoard msg store =
     let
-        ( newBoard, boardCmd, updatedCell ) =
+        ( newBoard, boardCmd, nextCoords ) =
             Board.update msg store.currentPlayer store.board
 
         newPlayer =
-            updatePlayer updatedCell store.currentPlayer
+            updatePlayer nextCoords store.currentPlayer
     in
         ( { store
             | board = newBoard
@@ -68,14 +63,14 @@ updateBoard msg store =
         )
 
 
-updatePlayer : Maybe Cell -> Player -> Player
-updatePlayer cell player =
-    case cell of
+updatePlayer : Maybe Coords -> Player -> Player
+updatePlayer coords player =
+    case coords of
+        Just _ ->
+            Helpers.switchPlayer player
+
         Nothing ->
             player
-
-        Just cell' ->
-            Helpers.switchPlayer player
 
 
 
