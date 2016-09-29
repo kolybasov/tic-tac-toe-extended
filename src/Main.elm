@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Game
-import Game.Debugger exposing (program)
+import Html.App exposing (program)
 
 
 main : Program Never

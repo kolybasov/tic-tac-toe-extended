@@ -5,6 +5,7 @@ module Game.Board
         , create
         , update
         , view
+        , checkWinner
         )
 
 import Html exposing (Html, div)
@@ -14,6 +15,7 @@ import Array exposing (Array)
 import Game.Field as Field exposing (Field)
 import Game.Types exposing (Row, Col, Player, Coords)
 import Game.Matrix as Matrix exposing (Matrix)
+import Game.Winner as Winner
 
 
 -- MODEL
@@ -125,6 +127,19 @@ makeFieldAvailableByCoords ( boardRow, boardCol ) board =
                 { field | available = False }
         )
         board
+
+
+checkWinner : Coords -> Board -> Maybe Player
+checkWinner lastMove board =
+    Winner.check
+        (\pattern ->
+            List.map
+                (\coords ->
+                    Matrix.get coords board `Maybe.andThen` .winner
+                )
+                pattern
+        )
+        lastMove
 
 
 
