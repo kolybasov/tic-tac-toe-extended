@@ -1,6 +1,6 @@
 module Game.Winner
     exposing
-        ( detect
+        ( check
         )
 
 import Game.Types exposing (Coords, Player)
@@ -35,6 +35,11 @@ patterns =
     ]
 
 
+filteredPatterns : Coords -> List (List Coords)
+filteredPatterns coords =
+    List.filter (List.any (\val -> val == coords)) patterns
+
+
 isAllEqual : List a -> Bool
 isAllEqual list =
     let
@@ -42,20 +47,20 @@ isAllEqual list =
             List.head list
     in
         case head of
-            Nothing ->
-                False
-
             Just el ->
                 List.filter (\val -> el == val) list
                     |> List.length
                     |> (>) 0
 
+            Nothing ->
+                False
 
-detect : (List Coords -> List (Maybe Player)) -> Maybe Player
-detect func =
+
+check : (List Coords -> List (Maybe Player)) -> Coords -> Maybe Player
+check func coords =
     let
         lines =
-            List.map (\pattern -> func pattern) patterns
+            List.map (\pattern -> func pattern) (filteredPatterns coords)
 
         wonLines =
             List.filter isAllEqual lines

@@ -9,6 +9,7 @@ module Game.Matrix
         , map
         , indexedMap
         , toList
+        , fromList
         )
 
 import Array exposing (Array)
@@ -57,9 +58,9 @@ flatten arr =
 
 all : (a -> Bool) -> Matrix a -> Bool
 all func matrix =
-    flatten matrix
-        |> Array.filter func
-        |> Array.isEmpty
+    toList matrix
+        |> List.concat
+        |> List.all func
 
 
 map : (a -> b) -> Matrix a -> Matrix b
@@ -75,6 +76,11 @@ indexedMap func matrix =
 toList : Matrix a -> List (List a)
 toList matrix =
     Array.toList (Array.map (\row -> Array.toList row) matrix)
+
+
+fromList : List (List a) -> Matrix a
+fromList lists =
+    Array.fromList (List.map (\list -> Array.fromList list) lists)
 
 
 get : Coords -> Matrix a -> Maybe a

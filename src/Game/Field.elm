@@ -5,6 +5,8 @@ module Game.Field
         , create
         , update
         , view
+        , isFull
+        , cellIsTaken
         )
 
 import Html exposing (Html, div)
@@ -13,6 +15,7 @@ import Array exposing (Array)
 import Game.Cell as Cell
 import Game.Types exposing (Row, Col, Player, Coords)
 import Game.Matrix as Matrix exposing (Matrix)
+import Game.Winner as Winner
 
 
 -- MODEL
@@ -45,6 +48,8 @@ create =
 
 type Msg
     = TakeCell Coords
+    | MakeFull
+    | SetWinner Player
 
 
 update : Msg -> Player -> Field -> ( Field, Cmd Msg, Maybe Coords )
@@ -55,6 +60,12 @@ update msg player field =
                 updateCell field coords player
             else
                 ( field, Cmd.none, Nothing )
+
+        MakeFull ->
+            ( { field | full = True, available = False }, Cmd.none, Nothing )
+
+        SetWinner player ->
+            ( { field | winner = (Just player) }, Cmd.none, Nothing )
 
 
 updateCell : Field -> Coords -> Player -> ( Field, Cmd Msg, Maybe Coords )
@@ -68,21 +79,31 @@ updateCell field coords player =
 
 cellIsTaken : Coords -> Field -> Bool
 cellIsTaken coords field =
-    let
-        cell =
-            Matrix.get coords field.cells
-    in
-        case cell of
-            Just cell' ->
-                cell' /= Nothing
+    case (Matrix.get coords field.cells) of
+        Just cell ->
+            cell /= Nothing
 
-            Nothing ->
-                False
+        Nothing ->
+            False
 
 
 isFull : Field -> Bool
 isFull field =
     Matrix.all (\player -> player /= Nothing) field.cells
+
+
+checkWinner : Coords -> Field -> Maybe Player
+checkWinner lastMove field =
+    Winner.check
+        (\pattern ->
+            List.map
+                (\coords ->
+                    Matrix.get coords field.cells
+                        |> Maybe.withDefault Nothing
+                )
+                pattern
+        )
+        lastMove
 
 
 
