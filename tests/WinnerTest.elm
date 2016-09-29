@@ -9,7 +9,7 @@ import Game.Matrix as Matrix exposing (Matrix)
 
 suite : Test
 suite =
-    describe "Game.Winner module" <|
+    describe "Winner" <|
         List.map
             (\( expected, lastMove, fixture ) ->
                 test ("should return " ++ (toString expected) ++ "as winner") <|
@@ -38,15 +38,11 @@ checkWinner expected lastMove fixture =
 
 fixtures : List ( Maybe Player, Coords, Matrix (Maybe Player) )
 fixtures =
-    [ fixtureNoWinner ]
-
-
-
--- [ fixtureRowWinner
--- , fixtureColWinner
--- , fixtureDiagonalWinner
--- , fixtureNoWinner
--- ]
+    [ fixtureRowWinner
+    , fixtureColWinner
+    , fixtureDiagonalWinner
+    , fixtureNoWinner
+    ]
 
 
 fixtureRowWinner : ( Maybe Player, Coords, Matrix (Maybe Player) )

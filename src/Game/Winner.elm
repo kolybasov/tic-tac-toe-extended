@@ -37,23 +37,17 @@ patterns =
 
 filteredPatterns : Coords -> List (List Coords)
 filteredPatterns coords =
-    List.filter (List.any (\val -> val == coords)) patterns
+    List.filter (List.any ((==) coords)) patterns
 
 
-isAllEqual : List a -> Bool
-isAllEqual list =
-    let
-        head =
-            List.head list
-    in
-        case head of
-            Just el ->
-                List.filter (\val -> el == val) list
-                    |> List.length
-                    |> (>) 0
+allAreTheSame : List a -> Bool
+allAreTheSame list =
+    case List.head list of
+        Just el ->
+            List.all ((==) el) list
 
-            Nothing ->
-                False
+        Nothing ->
+            True
 
 
 check : (List Coords -> List (Maybe Player)) -> Coords -> Maybe Player
@@ -63,15 +57,11 @@ check func coords =
             List.map (\pattern -> func pattern) (filteredPatterns coords)
 
         wonLines =
-            List.filter isAllEqual lines
+            List.filter allAreTheSame lines
 
         winner =
             List.concat wonLines
                 |> List.head
+                |> Maybe.withDefault Nothing
     in
-        case winner of
-            Nothing ->
-                Nothing
-
-            Just player ->
-                player
+        winner
