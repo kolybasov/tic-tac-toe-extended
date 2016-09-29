@@ -2,7 +2,7 @@ module Game.Board
     exposing
         ( Board
         , Msg
-        , emptyBoard
+        , create
         , update
         , view
         )
@@ -23,8 +23,8 @@ type alias Board =
     Matrix Field
 
 
-emptyBoard : Board
-emptyBoard =
+create : Board
+create =
     Matrix.create 3 (\_ _ -> Field.create)
 
 
@@ -55,12 +55,12 @@ updateField msg ( row, col ) player field board =
         updatedBoard =
             case nextCoords of
                 Just coords ->
-                    updateFieldsAvailability coords ( row, col ) field newBoard
+                    updateFieldsAvailability coords ( row, col ) newField newBoard
 
                 Nothing ->
                     newBoard
     in
-        ( updatedBoard, Cmd.none, nextCoords )
+        ( updatedBoard, Cmd.map (FieldMsg ( row, col ) field) fieldCmd, nextCoords )
 
 
 updateFieldsAvailability : Coords -> Coords -> Field -> Board -> Board
@@ -98,9 +98,9 @@ updateFieldsAvailability ( nextRow, nextCol ) previousCoords field board =
             Matrix.set previousCoords fieldIsFull board
     in
         if nextIsAvailable then
-            makeAllFieldsAvailable updatedBoard
-        else
             makeFieldAvailableByCoords ( nextRow, nextCol ) updatedBoard
+        else
+            makeAllFieldsAvailable updatedBoard
 
 
 makeAllFieldsAvailable : Board -> Board

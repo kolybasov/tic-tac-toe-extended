@@ -16,13 +16,15 @@ import Game.Helpers as Helpers
 type alias Store =
     { board : Board
     , currentPlayer : Player
+    , winner : Maybe Player
     }
 
 
 initialStore : Store
 initialStore =
-    { board = Board.emptyBoard
+    { board = Board.create
     , currentPlayer = X
+    , winner = Nothing
     }
 
 

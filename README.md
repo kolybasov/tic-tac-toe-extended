@@ -15,7 +15,7 @@
 * [x] Add ability to take cell on click
 * [x] Switch current player
 * [x] Add ability to take only allowed cell in the allowed field
-* [ ] Detect field state (Winner(X/O), Draw, Active)
+* [X] Detect field state (Winner(X/O), Draw, Active)
 * [ ] Detect board state ⇑ (same as top)
 * [ ] Allow to choose player name
 * [ ] Show current player

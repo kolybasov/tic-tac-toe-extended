@@ -5,6 +5,7 @@ import WinnerTest
 import MatrixTest
 import HelpersTest
 import FieldTest
+import BoardTest
 
 
 all : Test
@@ -14,4 +15,5 @@ all =
         , MatrixTest.suite
         , HelpersTest.suite
         , FieldTest.suite
+        , BoardTest.suite
         ]
