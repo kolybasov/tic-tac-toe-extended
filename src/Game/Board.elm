@@ -54,30 +54,75 @@ updateField msg ( row, col ) player field board =
 
         updatedBoard =
             case nextCoords of
+                Just coords ->
+                    updateFieldsAvailability coords ( row, col ) field newBoard
+
                 Nothing ->
                     newBoard
-
-                Just coords ->
-                    updateFieldsAvailability coords newBoard
     in
         ( updatedBoard, Cmd.none, nextCoords )
 
 
-updateFieldsAvailability : Coords -> Board -> Board
-updateFieldsAvailability ( row, col ) board =
+updateFieldsAvailability : Coords -> Coords -> Field -> Board -> Board
+updateFieldsAvailability ( nextRow, nextCol ) previousCoords field board =
+    let
+        winner =
+            Field.checkWinner ( nextRow, nextCol ) field
+
+        fieldWithWinner =
+            case winner of
+                Just player ->
+                    Field.setWinner player field
+
+                Nothing ->
+                    field
+
+        fieldIsFull =
+            if Field.isFull fieldWithWinner then
+                Field.setFull fieldWithWinner
+            else
+                fieldWithWinner
+
+        nextField =
+            Matrix.get ( nextRow, nextCol ) board
+
+        nextIsAvailable =
+            case nextField of
+                Just field' ->
+                    field'.full == False
+
+                Nothing ->
+                    False
+
+        updatedBoard =
+            Matrix.set previousCoords fieldIsFull board
+    in
+        if nextIsAvailable then
+            makeAllFieldsAvailable updatedBoard
+        else
+            makeFieldAvailableByCoords ( nextRow, nextCol ) updatedBoard
+
+
+makeAllFieldsAvailable : Board -> Board
+makeAllFieldsAvailable board =
+    Matrix.map
+        (\field ->
+            if field.full then
+                field
+            else
+                { field | available = True }
+        )
+        board
+
+
+makeFieldAvailableByCoords : Coords -> Board -> Board
+makeFieldAvailableByCoords ( boardRow, boardCol ) board =
     Matrix.indexedMap
-        (\boardRow boardCol field ->
-            let
-                coordsAreEqual =
-                    (boardCol == col) && (boardRow == row)
-
-                availability =
-                    coordsAreEqual
-
-                newField =
-                    { field | available = availability }
-            in
-                newField
+        (\row col field ->
+            if (boardRow == row) && (boardCol == col) then
+                { field | available = True }
+            else
+                { field | available = False }
         )
         board
 

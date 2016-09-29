@@ -4,6 +4,7 @@ import Test exposing (..)
 import WinnerTest
 import MatrixTest
 import HelpersTest
+import FieldTest
 
 
 all : Test
@@ -12,4 +13,5 @@ all =
         [ WinnerTest.suite
         , MatrixTest.suite
         , HelpersTest.suite
+        , FieldTest.suite
         ]

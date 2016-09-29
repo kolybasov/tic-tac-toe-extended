@@ -1,15 +1,18 @@
 module Game.Field
     exposing
         ( Field
-        , Msg
+        , Msg(TakeCell)
         , create
         , update
         , view
         , isFull
         , cellIsTaken
+        , setWinner
+        , setFull
+        , checkWinner
         )
 
-import Html exposing (Html, div)
+import Html exposing (Html, div, text)
 import Html.Attributes exposing (class, classList)
 import Array exposing (Array)
 import Game.Cell as Cell
@@ -31,15 +34,11 @@ type alias Field =
 
 create : Field
 create =
-    let
-        cells =
-            Matrix.create 3 (\_ _ -> Nothing)
-    in
-        { cells = cells
-        , available = True
-        , winner = Nothing
-        , full = False
-        }
+    { cells = Matrix.create 3 (\_ _ -> Nothing)
+    , available = True
+    , winner = Nothing
+    , full = False
+    }
 
 
 
@@ -48,8 +47,6 @@ create =
 
 type Msg
     = TakeCell Coords
-    | MakeFull
-    | SetWinner Player
 
 
 update : Msg -> Player -> Field -> ( Field, Cmd Msg, Maybe Coords )
@@ -61,12 +58,6 @@ update msg player field =
             else
                 ( field, Cmd.none, Nothing )
 
-        MakeFull ->
-            ( { field | full = True, available = False }, Cmd.none, Nothing )
-
-        SetWinner player ->
-            ( { field | winner = (Just player) }, Cmd.none, Nothing )
-
 
 updateCell : Field -> Coords -> Player -> ( Field, Cmd Msg, Maybe Coords )
 updateCell field coords player =
@@ -75,6 +66,16 @@ updateCell field coords player =
             Matrix.set coords (Just player) field.cells
     in
         ( { field | cells = newCells }, Cmd.none, Just coords )
+
+
+setWinner : Player -> Field -> Field
+setWinner player field =
+    { field | winner = Just player }
+
+
+setFull : Field -> Field
+setFull field =
+    { field | available = False, full = True }
 
 
 cellIsTaken : Coords -> Field -> Bool
@@ -116,9 +117,35 @@ view field =
         [ classList
             [ ( "field", True )
             , ( "disabled", not field.available )
+            , ( "no-winner", field.winner == Nothing )
             ]
         ]
-        (Array.toList (Array.indexedMap rowView field.cells))
+        (fieldContent field)
+
+
+fieldContent : Field -> List (Html Msg)
+fieldContent field =
+    let
+        winner =
+            winnerView field.winner
+
+        cells =
+            Array.toList (Array.indexedMap rowView field.cells)
+    in
+        winner :: cells
+
+
+winnerView : Maybe Player -> Html Msg
+winnerView player =
+    div
+        [ class "field-winner" ]
+        [ case player of
+            Just player' ->
+                text (toString player')
+
+            Nothing ->
+                text ""
+        ]
 
 
 rowView : Row -> Array (Maybe Player) -> Html Msg
