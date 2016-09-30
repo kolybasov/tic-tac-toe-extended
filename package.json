@@ -2,7 +2,9 @@
   "name": "ttt-extended",
   "version": "0.1.0",
   "description": "Tic Tac Toe extended game build with Elm.",
-  "scripts": {},
+  "scripts": {
+    "deploy": "gh-pages -d dist"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kolybasov/tic-tac-toe-extended.git"
@@ -15,6 +17,7 @@
   },
   "homepage": "https://github.com/kolybasov/tic-tac-toe-extended#readme",
   "dependencies": {
+    "gh-pages": "0.11.0",
     "normalize.css": "4.2.0"
   }
 }
