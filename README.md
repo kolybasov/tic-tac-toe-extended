@@ -20,6 +20,7 @@
 * [x] Add new game button
 * [ ] Allow to choose player name
 * [x] Show current player
+* [ ] Add rules
 * [ ] Add multiplayer
   * [ ] Create API [probably link to server](https://gihub.com/kolybasov/tic-tac-toe-extended-server)
   * [ ] Integrate with app
