@@ -22,7 +22,7 @@
 * [x] Show current player
 * [ ] Add rules
 * [ ] Add multiplayer
-  * [ ] Create API [probably link to server](https://gihub.com/kolybasov/tic-tac-toe-extended-server)
+  * [ ] Create API [Server](https://github.com/kolybasov/tic-tac-toe-extended-server)
   * [ ] Integrate with app
   * [ ] Allow to create room
   * [ ] Allow to join room by id or share link
