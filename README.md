@@ -1,6 +1,7 @@
 # Tic Tac Toe extended
 
-![screenshot]( https://i.imgur.com/l1ERsI7.png )
+![screenshot]( https://i.imgur.com/TqxRUeT.png )
+![screenshot]( https://i.imgur.com/ZsbymPz.png )
 
 ## Run
 
