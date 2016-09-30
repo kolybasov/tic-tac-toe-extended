@@ -8,8 +8,8 @@ module Game.Board
         , checkWinner
         )
 
-import Html exposing (Html, div)
-import Html.Attributes exposing (class)
+import Html exposing (Html, div, text, span, h2)
+import Html.Attributes exposing (class, classList)
 import Html.App as App
 import Array exposing (Array)
 import Game.Field as Field exposing (Field)
@@ -38,14 +38,14 @@ type Msg
     = FieldMsg Coords Field Field.Msg
 
 
-update : Msg -> Player -> Board -> ( Board, Cmd Msg, Maybe Coords )
+update : Msg -> Player -> Board -> ( Board, Cmd Msg, Maybe Coords, Maybe Coords )
 update msg player board =
     case msg of
         FieldMsg coords field msg' ->
             updateField msg' coords player field board
 
 
-updateField : Field.Msg -> Coords -> Player -> Field -> Board -> ( Board, Cmd Msg, Maybe Coords )
+updateField : Field.Msg -> Coords -> Player -> Field -> Board -> ( Board, Cmd Msg, Maybe Coords, Maybe Coords )
 updateField msg ( row, col ) player field board =
     let
         ( newField, fieldCmd, nextCoords ) =
@@ -61,8 +61,16 @@ updateField msg ( row, col ) player field board =
 
                 Nothing ->
                     newBoard
+
+        lastFieldCoords =
+            case nextCoords of
+                Just _ ->
+                    Just ( row, col )
+
+                Nothing ->
+                    Nothing
     in
-        ( updatedBoard, Cmd.map (FieldMsg ( row, col ) field) fieldCmd, nextCoords )
+        ( updatedBoard, Cmd.map (FieldMsg ( row, col ) field) fieldCmd, nextCoords, lastFieldCoords )
 
 
 updateFieldsAvailability : Coords -> Coords -> Field -> Board -> Board
@@ -146,9 +154,46 @@ checkWinner lastMove board =
 -- VIEW
 
 
-view : Board -> Html Msg
-view board =
-    div [ class "board" ] (Array.toList (Array.indexedMap rowView board))
+view : Board -> Maybe Player -> Html Msg
+view board winner =
+    div []
+        [ h2 [] [ text "Tic Tac Toe Extended" ]
+        , div
+            [ classList
+                [ ( "board", True )
+                , ( "no-winner", winner == Nothing )
+                ]
+            ]
+            (boardContent winner board)
+        ]
+
+
+boardContent : Maybe Player -> Board -> List (Html Msg)
+boardContent winner board =
+    let
+        winnerBlock =
+            winnerView winner
+
+        fields =
+            Array.toList (Array.indexedMap rowView board)
+    in
+        winnerBlock :: fields
+
+
+winnerView : Maybe Player -> Html Msg
+winnerView winner =
+    let
+        content =
+            case winner of
+                Just player ->
+                    [ span [ class "board-winner-player" ] [ text (toString player) ]
+                    , span [ class "board-winner-words" ] [ text "won!" ]
+                    ]
+
+                Nothing ->
+                    [ text "" ]
+    in
+        div [ class "board-winner" ] content
 
 
 rowView : Row -> Array Field -> Html Msg

@@ -16,9 +16,10 @@
 * [x] Switch current player
 * [x] Add ability to take only allowed cell in the allowed field
 * [X] Detect field state (Winner(X/O), Draw, Active)
-* [ ] Detect board state ⇑ (same as top)
+* [x] Detect board state ⇑ (same as top)
+* [x] Add new game button
 * [ ] Allow to choose player name
-* [ ] Show current player
+* [x] Show current player
 * [ ] Add multiplayer
   * [ ] Create API [probably link to server](https://gihub.com/kolybasov/tic-tac-toe-extended-server)
   * [ ] Integrate with app

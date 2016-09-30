@@ -3,8 +3,6 @@ body {
 }
 
 .root {
-  max-width: 520px;
-  min-width: 320px;
   width: 100%;
   margin: 50px auto;
 }
@@ -13,10 +11,63 @@ h2 {
   text-align: center;
 }
 
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.control-panel {
+  padding: 0 20px;
+}
+
+.control-panel .current-player {
+  margin-top: 70px;
+}
+
+.control-panel .current-player span {
+  font-weight: 400;
+}
+
+.control-panel .buttons button {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+}
+
 .board {
   box-sizing: border-box;
   display: flex;
+  max-width: 520px;
+  min-width: 320px;
   width: 100%;
+  position: relative;
+}
+
+.board .board-winner {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(50, 50, 50, 0.8);
+  color: #ffffff;
+  text-align: center;
+  z-index: 10;
+}
+
+.board.no-winner .board-winner {
+  display: none;
+}
+
+.board .board-winner span.board-winner-player {
+  font-size: 250px;
+}
+
+
+.board .board-winner span.board-winner-words {
+  font-size: 200px;
 }
 
 .field {
