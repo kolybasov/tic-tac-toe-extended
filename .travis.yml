@@ -1,5 +1,23 @@
-language: haskell
+sudo: false
+
+cache:
+  directories:
+    - test/elm-stuff/build-artifacts
+
+env:
+  matrix:
+    - ELM_VERSION=0.17.0 TARGET_NODE_VERSION=node
+
 install:
-  - npm install -g elm elm-test
-  - elm-package install -y
-script: elm-test
+  - nvm install $TARGET_NODE_VERSION
+  - nvm use $TARGET_NODE_VERSION
+  - node --version
+  - npm --version
+  - cd tests
+  - npm install -g elm@$ELM_VERSION elm-test
+  - npm install
+  - git clone https://github.com/NoRedInk/elm-ops-tooling
+  - elm-ops-tooling/with_retry.rb elm package install --yes
+
+script:
+  - npm test

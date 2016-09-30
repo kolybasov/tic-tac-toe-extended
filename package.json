@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Tic Tac Toe extended game build with Elm.",
   "scripts": {
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "test": "elm-test"
   },
   "repository": {
     "type": "git",
