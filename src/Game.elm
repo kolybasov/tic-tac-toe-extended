@@ -4,12 +4,12 @@ module Game
         , init
         , update
         , view
+        , Msg
         )
 
-import Html exposing (Html, text, h2, div, span, button)
+import Html exposing (Html, text, h2, div, span, button, map)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
-import Html.App as App
 import Game.Board as Board exposing (Board)
 import Game.Types exposing (Player(X), Coords)
 import Game.Helpers as Helpers
@@ -47,9 +47,9 @@ type Msg
 update : Msg -> Store -> ( Store, Cmd Msg )
 update msg store =
     case msg of
-        BoardMsg msg' ->
+        BoardMsg msg_ ->
             if store.winner == Nothing then
-                updateBoard msg' store
+                updateBoard msg_ store
             else
                 ( store, Cmd.none )
 
@@ -91,8 +91,8 @@ updatePlayer coords player =
 updateWinner : Maybe Coords -> Board -> Maybe Player
 updateWinner coords board =
     case coords of
-        Just coords' ->
-            Board.checkWinner coords' board
+        Just coords_ ->
+            Board.checkWinner coords_ board
 
         Nothing ->
             Nothing
@@ -114,7 +114,7 @@ view store =
 
 boardView : Board -> Maybe Player -> Html Msg
 boardView board winner =
-    App.map BoardMsg (Board.view board winner)
+    map BoardMsg (Board.view board winner)
 
 
 controlsView : Player -> Html Msg

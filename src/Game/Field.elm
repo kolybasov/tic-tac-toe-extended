@@ -140,8 +140,8 @@ winnerView player =
     div
         [ class "field-winner" ]
         [ case player of
-            Just player' ->
-                text (toString player')
+            Just player_ ->
+                text (toString player_)
 
             Nothing ->
                 text ""

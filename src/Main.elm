@@ -1,10 +1,10 @@
 module Main exposing (..)
 
-import Game
-import Html.App exposing (program)
+import Game exposing (Store, Msg)
+import Html exposing (program)
 
 
-main : Program Never
+main : Program Never Store Msg
 main =
     program
         { init = Game.init
