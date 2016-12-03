@@ -36,7 +36,7 @@ create : Int -> (Row -> Col -> a) -> Matrix a
 create size callback =
     let
         arrToMap =
-            Array.fromList [0..(size - 1)]
+            Array.fromList (List.range 0 (size - 1))
     in
         Array.map
             (\row ->
@@ -85,7 +85,7 @@ fromList lists =
 
 get : Coords -> Matrix a -> Maybe a
 get ( row, col ) matrix =
-    Array.get row matrix `Maybe.andThen` Array.get col
+    Array.get row matrix |> Maybe.andThen (Array.get col)
 
 
 set : Coords -> a -> Matrix a -> Matrix a
@@ -96,15 +96,15 @@ set ( row, col ) el matrix =
 
         newRow =
             case rowToChange of
-                Just row' ->
-                    Just (Array.set col el row')
+                Just row_ ->
+                    Just (Array.set col el row_)
 
                 Nothing ->
                     Nothing
     in
         case newRow of
-            Just row' ->
-                Array.set row row' matrix
+            Just row_ ->
+                Array.set row row_ matrix
 
             Nothing ->
                 matrix
