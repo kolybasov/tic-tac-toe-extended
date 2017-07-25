@@ -1,5 +1,7 @@
 # Tic Tac Toe extended [![Travis](https://img.shields.io/travis/kolybasov/tic-tac-toe-extended.svg?maxAge=3600)](https://travis-ci.org/kolybasov/tic-tac-toe-extended)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kolybasov/tic-tac-toe-extended.svg)](https://greenkeeper.io/)
+
 ## [Live demo!]( https://kolybasov.github.io/tic-tac-toe-extended ) ![screenshot]( https://i.imgur.com/TqxRUeT.png )
 
 ## Run
